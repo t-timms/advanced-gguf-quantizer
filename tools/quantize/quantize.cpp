@@ -8561,6 +8561,18 @@ static bool selector_choose_policy(
                                     stageb_collect_patch_eval_metrics)) {
                             r.direct_applied = true;
                             patch_done_one("encoded direct", pos);
+                            // Per-tensor cache clear (2026-09-14 patch): the six
+                            // thread_local CUDA buffer caches in nvfp4-adv.cu
+                            // (stream/autotune/quant/mxfp6/classic/kld) only grow,
+                            // never shrink, within this loop - previously only
+                            // cleared once per whole policy (finish_selector_
+                            // cuda_policy_scope, ~426 tensors later), so caches
+                            // stayed sized for the largest tensor seen so far for
+                            // the rest of the pass. Root-caused via source read
+                            // after 3 real runs (192/209/176 CUDA-encoder-search
+                            // failures from GPU memory exhaustion) - see
+                            // t-timms/quantlab commit history same date.
+                            nvfp4_clear_cuda_stream_cache();
                             continue;
                         }
                         if (!nvfp4_selector_quantize_binding(b, policy.cfg, stageb_binding_nthread, b.working_target_bytes,
@@ -8572,6 +8584,7 @@ static bool selector_choose_policy(
                             return false;
                         }
                         patch_done_one("encoded", pos);
+                        nvfp4_clear_cuda_stream_cache();
                     }
                     patch_heartbeat.finish(patch_detail("complete", no_failed_patch));
                     return true;
