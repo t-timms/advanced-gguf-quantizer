@@ -324,7 +324,7 @@ bool ftype_is_mixed_nvfp4_mxfp6(const std::string & ftype_str) {
     printf("                                      write main-path candidate ranking and final exact tensor-type map.\n");
     printf("  --selector-eval-top N\n");
     printf("                                      number of policies used for full-base KLD/PPL evaluation. default: 16.\n");
-    printf("  --selector-n-seq N\n");
+    printf("  --nvfp4-selector-n-seq N\n");
     printf("                                      override selector KLD sequence count. default: auto from free CUDA memory.\n");
     printf("  --selector-eval-batch N\n");
     printf("                                      token batch size used during selector KLD eval; values below ctx exercise multi-batch KLD.\n");

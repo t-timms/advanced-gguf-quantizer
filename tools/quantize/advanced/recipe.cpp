@@ -1523,7 +1523,7 @@ std::vector<std::string> build_quantize_args(const Recipe & r, bool force_dry_ru
     push_bool("--selector-only", r.selector.only);
     if (!use_mode_defaults) {
         push_pair("--selector-eval-top", r.selector.eval_top);
-        push_pair("--selector-n-seq", r.selector.n_seq);
+        push_pair("--nvfp4-selector-n-seq", r.selector.n_seq);
     }
     push_pair("--selector-sensitivity-report", r.selector.sensitivity_report);
     push_pair("--selector-sensitivity-top", r.selector.sensitivity_top);
